@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition.Hosting;
+using System.Diagnostics;
 using System.Linq;
 using Newtonsoft.Json;
 using NLog;
@@ -24,6 +25,7 @@ namespace Raven.Tests.Bugs
 		{
 			for (int x = 0; x < 50; x++)
 			{
+				Trace.WriteLine("Iteration #" + x);
 				using (var store = CreateStore())
 				{
 					for (int i = 0; i < 12; i++)
@@ -41,7 +43,7 @@ namespace Raven.Tests.Bugs
 			{
 				for (int i = 0; i < 6; i++)
 				{
-					int count = session.Advanced.LuceneQuery<object>("view" + (i+1)).WaitForNonStaleResults().QueryResult.TotalResults;
+					int count = session.Advanced.LuceneQuery<object>("view" + (i+1)).WaitForNonStaleResultsAsOfLastWrite().QueryResult.TotalResults;
 					if(count != shouldBe)
 					{
 						var boundedMemoryTarget = LogManager.Configuration.AllTargets.OfType<BoundedMemoryTarget>().FirstOrDefault();
@@ -51,7 +53,7 @@ namespace Raven.Tests.Bugs
 							Console.WriteLine(logEventInfo);
 						}
 					}
-					Assert.Equal(count, shouldBe);
+					Assert.Equal(shouldBe, count);
 				}
 			}
 		}
