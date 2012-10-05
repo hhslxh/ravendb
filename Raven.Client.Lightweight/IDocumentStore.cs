@@ -177,6 +177,6 @@ namespace Raven.Client
 	    /// </summary>
 	    /// <param name="documentStoreListener">The document store listener.</param>
 	    /// <returns></returns>
-	    IDocumentStore RegisterListener(IDocumentStoreListener documentStoreListener);
+        DocumentStoreBase RegisterListener(IDocumentStoreListener documentStoreListener);
 	}
 }
